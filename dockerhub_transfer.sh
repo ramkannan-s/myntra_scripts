@@ -7,16 +7,18 @@ set -u
 
 imageslist="dockerhub_images_list.txt"
 
-#docker login myntra.dockerhub.com -u <username> -p password
+#docker login dockerhub.myntra.com:5000 -u <username> -p <password>
 
 while IFS= read -r image_name; do
-   # docker pull myntra.dockerhub.com/"$image_name"
-    docker tag myntra.dockerhub.com/"$image_name" artifactory.myntra.com/"$image_name":latest
+   # docker pull dockerhub.myntra.com:5000/$image_name
+   echo -e "\nImage Name Tagging ==> $image_name"
+   docker tag dockerhub.myntra.com:5000/$image_name artifactory-ci.myntra.com/dockerhub/$image_name
 done < $imageslist
 
 
-docker login artifactory.myntra.com -u <username> -p password
+docker login artifactory-ci.myntra.com -u admin -p @Myntra12
 
 while IFS= read -r image_name; do
-    docker push artifactory.myntra.com/"$image_name":latest
+    echo -e "\nPush Image ==> $image_name"
+    docker push artifactory-ci.myntra.com/dockerhub/$image_name
 done < $imageslist
